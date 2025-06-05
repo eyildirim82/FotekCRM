@@ -1,115 +1,150 @@
-# 🏢 Fotek CRM v1.0
+# 🚀 Fotek CRM MVP
 
-**AI destekli, web tabanlı CRM sistemi** - Fotek TR distribütörlüğü için geliştirilmiştir.
+Fotek CRM projesinin Minimum Viable Product (MVP) versiyonudur. Bu proje atomic sprint planına göre geliştirilmektedir.
 
-## 📋 Proje Özeti
+## 📋 S-1 Sprint: CI Pipeline
 
-Fotek CRM, ihracat (%0 KDV) ve yurt içi (%20 KDV) satış, fatura, stok ve dövizli iskonto işlemlerini tek portala taşıyan modern bir CRM sistemidir.
+### ✅ Tamamlanan Özellikler (S-0 + S-1)
+- Docker Compose yapılandırması (db, api, frontend, nginx)
+- NestJS API backend `/health` endpoint ile
+- React Vite frontend "Hello CRM" sayfası
+- MSSQL veritabanı
+- Nginx reverse proxy
+- **GitHub Actions CI Pipeline**
+- **Jest Unit Testleri**
+- **Docker Build & Push otomasyonu**
+- **ESLint yapılandırması**
 
-## 🏗️ Teknoloji Stack
-
-- **Frontend:** React 18 + Vite + TypeScript + Ant Design
-- **Backend:** NestJS + TypeORM + JWT Auth
-- **Veritabanı:** Microsoft SQL Server 2022
-- **AI:** Ollama LLM (Lead Scoring)
-- **DevOps:** Docker + Docker Compose + Nginx
-- **Deployment:** Ubuntu 22.04 (4 vCPU / 16 GB RAM)
-
-## 📁 Proje Yapısı
-
-```
-FotekCRM/
-├── backend/          # NestJS API
-├── frontend/         # React + Vite
-├── database/         # MSSQL scripts
-├── docker/           # Docker configs
-├── docs/            # Belgeler (SRS, DSD)
-├── scripts/         # Deployment scripts
-└── tests/           # Test dosyaları
-```
+### 🏗️ Teknoloji Stack
+- **Backend**: NestJS + TypeScript
+- **Frontend**: React + Vite + TypeScript + Ant Design
+- **Database**: Microsoft SQL Server
+- **Reverse Proxy**: Nginx
+- **Containerization**: Docker + Docker Compose
 
 ## 🚀 Hızlı Başlangıç
 
 ### Gereksinimler
-- Node.js 18+
-- Docker & Docker Compose
+- Docker Desktop
 - Git
 
 ### Kurulum
 
+1. **Projeyi klonlayın:**
+   ```bash
+   git clone <repository-url>
+   cd FotekCRM
+   ```
+
+2. **Docker Compose ile servisleri başlatın:**
+   ```bash
+   docker compose up --build
+   ```
+
+3. **Servislerin durumunu kontrol edin:**
+   - Frontend: http://localhost:80
+   - API Health: http://localhost:3000/api/health
+   - Database: localhost:1433
+
+### 🧪 Test Etme
+
+#### Manuel Test Adımları:
+
+1. **Frontend Kontrolü:**
+   - http://localhost:80 adresine gidin
+   - "Fotek CRM" başlığını görmeli
+   - "API Durumunu Kontrol Et" butonuna tıklayın
+
+2. **API Health Check:**
+   ```bash
+   curl http://localhost:3000/api/health
+   ```
+   Beklenen yanıt:
+   ```json
+   {
+     "status": "OK",
+     "timestamp": "2025-01-05T...",
+     "service": "Fotek CRM API",
+     "version": "1.0.0",
+     "environment": "development"
+   }
+   ```
+
+3. **Database Bağlantısı:**
+   ```bash
+   docker exec -it fotek_db /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'FotekCRM2025!'
+   ```
+
+4. **Container Durumları:**
+   ```bash
+   docker compose ps
+   ```
+   Tüm servisler "healthy" durumda olmalı.
+
+### 🔍 Servis Portları
+- **Frontend**: 5173 (container), 80 (nginx proxy)
+- **API**: 3000
+- **Database**: 1433
+- **Nginx**: 80, 443
+
+### 📂 Proje Yapısı
+```
+FotekCRM/
+├── docker-compose.yml
+├── backend/
+│   ├── src/
+│   │   ├── main.ts
+│   │   ├── app.module.ts
+│   │   ├── app.controller.ts
+│   │   └── app.service.ts
+│   ├── package.json
+│   └── Dockerfile
+├── frontend/
+│   ├── src/
+│   │   ├── main.tsx
+│   │   ├── App.tsx
+│   │   └── App.css
+│   ├── package.json
+│   └── Dockerfile
+├── nginx/
+│   └── nginx.conf
+└── docs/
+```
+
+## 🎯 Done Kriterleri (S-0)
+- ✅ `docker compose up` komutu çalışıyor
+- ✅ Frontend http://localhost:80 adresinde erişilebilir
+- ✅ API `/health` endpoint'i 200 döndürüyor
+- ✅ Tüm servisler container'da çalışıyor
+
+## 🔄 Gelecek Sprint'ler
+Atomic Sprint Plan'a göre sonraki sprint'ler:
+- **S-1**: Firma ve iletişim modülleri
+- **S-2**: Fotoğraf yönetimi
+- **S-3**: Firma detay sayfası
+- **S-4**: Müşteri takip sistemı
+
+## 🛠️ Geliştirme
+
+### Backend Geliştirme
 ```bash
-# Repository'yi klonlayın
-git clone <repo-url>
-cd FotekCRM
+cd backend
+npm install
+npm run start:dev
+```
 
-# Tüm bağımlılıkları yükleyin
-npm run install:all
-
-# Docker servisleri başlatın
-npm run docker:up
-
-# Geliştirme modunda çalıştırın
+### Frontend Geliştirme
+```bash
+cd frontend
+npm install
 npm run dev
 ```
 
-### Kullanılabilir Komutlar
-
-```bash
-npm run dev              # Frontend + Backend geliştirme modu
-npm run build            # Production build
-npm run test             # Tüm testleri çalıştır
-npm run lint             # Code linting
-npm run format           # Code formatting
-npm run docker:up        # Docker servisleri başlat
-npm run docker:down      # Docker servisleri durdur
-```
-
-## 📚 Dokümantasyon
-
-- [Software Requirements Specification (SRS)](./docs/SRS_v1.0.md)
-- [Design Specification Document (DSD)](./docs/DSD_v1.0.md)
-- [Yapılacaklar Listesi](./docs/YAPILACAKLAR.md)
-
-## 🏃‍♂️ Sprint Planı
-
-- **Sprint 1** (2 hafta): Docker iskeleti, Auth, Ürün/Varyant, TCMB kur
-- **Sprint 2** (3 hafta): Stok ROP, Invoice/Credit Note, Excel import
-- **Sprint 3** (2 hafta): Keycloak SSO, Power BI, E2E testler
-
-## 🔒 Güvenlik
-
-- JWT tabanlı kimlik doğrulama (8 saat token)
-- Role-based access control (Satış, Muhasebe, Yönetici)
-- OWASP ASVS 4.0 uyumluluk
-- KVKK teknik tedbirler
-
-## 📊 Özellikler
-
-- ✅ Ürün & Varyant Yönetimi (3 seviye: renk, beden, kapasite)
-- ✅ Sipariş & Stok Yönetimi (ROP alerts)
-- ✅ Faturalama (%0/%20 KDV, dövizli işlemler)
-- ✅ Kısmi/Tam İade & Credit Note
-- ✅ Excel/CSV Toplu İçe Aktarım
-- ✅ TCMB Kur Entegrasyonu
-- ✅ AI Lead Scoring
-- ✅ Audit Log (KVKK uyumlu)
-
-## 🤝 Katkıda Bulunma
-
-1. Fork edin
-2. Feature branch oluşturun (`git checkout -b feature/AmazingFeature`)
-3. Commit edin (`git commit -m 'Add some AmazingFeature'`)
-4. Push edin (`git push origin feature/AmazingFeature`)
-5. Pull Request açın
-
-## 📝 Lisans
-
-Bu proje özel lisans altındadır. Detaylar için iletişime geçin.
-
-## 📞 İletişim
-
-**Fotek CRM Geliştirme Ekibi**
+## 📊 İzleme ve Loglama
+- Container logları: `docker compose logs [service-name]`
+- API logları: `docker compose logs api`
+- Database logları: `docker compose logs db`
 
 ---
 
-*Son Güncelleme: 2 Haziran 2025*
+**Fotek CRM MVP - S-0 Sprint Tamamlandı! 🎉** 

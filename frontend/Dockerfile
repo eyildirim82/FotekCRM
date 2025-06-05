@@ -1,0 +1,19 @@
+FROM node:18-alpine
+
+# Çalışma dizini oluştur
+WORKDIR /app
+
+# Package dosyalarını kopyala
+COPY package*.json ./
+
+# Bağımlılıkları yükle
+RUN npm install
+
+# Kaynak kodunu kopyala
+COPY . .
+
+# Port aç
+EXPOSE 5173
+
+# Development server'ı başlat
+CMD ["npm", "run", "dev"] 
