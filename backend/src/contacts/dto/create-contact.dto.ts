@@ -87,6 +87,7 @@ export class CreateContactDto {
   @Length(1, 1000, { message: 'Notlar en fazla 1000 karakter olabilir' })
   notes?: string
 
-  @IsUUID('4', { message: 'Geçerli bir firma ID\'si giriniz' })
+  @IsString({ message: 'Firma ID alanı metin olmalıdır' })
+  @Length(36, 36, { message: 'Geçerli bir firma ID\'si giriniz' })
   companyId: string
 } 

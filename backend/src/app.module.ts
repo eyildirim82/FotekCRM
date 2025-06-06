@@ -5,9 +5,11 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { CompaniesModule } from './companies/companies.module';
 import { ContactsModule } from './contacts/contacts.module';
+import { ProductsModule } from './products/products.module';
 import { User } from './entities/user.entity';
 import { Company } from './entities/company.entity';
 import { Contact } from './entities/contact.entity';
+import { Product } from './entities/product.entity';
 
 @Module({
   imports: [
@@ -18,7 +20,7 @@ import { Contact } from './entities/contact.entity';
       username: process.env.DB_USER || 'sa',
       password: process.env.DB_PASSWORD || 'FotekCRM2025!',
       database: process.env.DB_NAME || 'master',
-      entities: [User, Company, Contact],
+      entities: [User, Company, Contact, Product],
       synchronize: true, // Only for development
       options: {
         encrypt: false,
@@ -28,6 +30,7 @@ import { Contact } from './entities/contact.entity';
     AuthModule,
     CompaniesModule,
     ContactsModule,
+    ProductsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
