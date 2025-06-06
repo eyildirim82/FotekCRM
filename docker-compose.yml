@@ -30,7 +30,7 @@ services:
       NODE_ENV: development
       DB_HOST: db
       DB_PORT: 1433
-      DB_NAME: fotek_crm
+      DB_NAME: master
       DB_USER: sa
       DB_PASSWORD: FotekCRM2025!
       JWT_SECRET: fotek-jwt-secret-key-2025

@@ -1,7 +1,7 @@
 FROM node:18-alpine
 
-# Curl'ü health check için yükle
-RUN apk add --no-cache curl
+# Curl ve build tools yükle
+RUN apk add --no-cache curl python3 make g++
 
 # Çalışma dizini oluştur
 WORKDIR /app
