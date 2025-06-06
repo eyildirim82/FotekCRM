@@ -45,7 +45,9 @@ jobs:
     # Frontend Tests  
     - name: Install Frontend Dependencies
       working-directory: ./frontend
-      run: npm ci
+      run: |
+        npm ci
+        npm ls @typescript-eslint/eslint-plugin @typescript-eslint/parser
       
     - name: Run Frontend Lint
       working-directory: ./frontend
