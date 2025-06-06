@@ -1,4 +1,5 @@
 import axios from 'axios';
+import 'jest';
 
 // Set default timeout for integration tests
 jest.setTimeout(30000);
@@ -35,4 +36,30 @@ async function waitForServices() {
   }
   
   throw new Error('Services are not ready after maximum retries');
-} 
+}
+
+// Mock environment variables
+process.env.NODE_ENV = 'test';
+process.env.API_URL = 'http://localhost:3000';
+
+// Global test utilities
+global.console = {
+  ...console,
+  // Suppress console.log in tests unless needed
+  log: jest.fn(),
+  debug: jest.fn(),
+  info: console.info,
+  warn: console.warn,
+  error: console.error,
+};
+
+// Setup global error handling for tests
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
+// Clean up after each test
+afterEach(async () => {
+  // Add any global cleanup here if needed
+  jest.clearAllMocks();
+}); 

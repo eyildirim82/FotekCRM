@@ -77,7 +77,7 @@ describe('Contact Management Integration Tests', () => {
           headers: { Authorization: `Bearer ${authToken}` }
         });
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log('Cleanup error:', error.message);
     }
   });
@@ -332,9 +332,9 @@ describe('Contact Management Integration Tests', () => {
 
       for (const endpoint of endpoints) {
         try {
-          await axios[endpoint.method](endpoint.url, endpoint.data);
+          await (axios as any)[endpoint.method](endpoint.url, endpoint.data);
           fail(`Expected 401 for ${endpoint.method.toUpperCase()} ${endpoint.url}`);
-        } catch (error) {
+        } catch (error: any) {
           expect(error.response.status).toBe(401);
         }
       }
@@ -346,7 +346,7 @@ describe('Contact Management Integration Tests', () => {
           headers: { Authorization: 'Bearer invalid-token' }
         });
         fail('Expected 401 for invalid token');
-      } catch (error) {
+      } catch (error: any) {
         expect(error.response.status).toBe(401);
       }
     });
@@ -364,7 +364,7 @@ describe('Contact Management Integration Tests', () => {
           headers: { Authorization: `Bearer ${authToken}` }
         });
         fail('Expected validation error');
-      } catch (error) {
+      } catch (error: any) {
         expect(error.response.status).toBe(400);
       }
     });
@@ -375,7 +375,7 @@ describe('Contact Management Integration Tests', () => {
           headers: { Authorization: `Bearer ${authToken}` }
         });
         fail('Expected 404 for non-existent contact');
-      } catch (error) {
+      } catch (error: any) {
         expect(error.response.status).toBe(404);
         expect(error.response.data.message).toBe('Kişi bulunamadı');
       }
@@ -399,7 +399,7 @@ describe('Contact Management Integration Tests', () => {
           headers: { Authorization: `Bearer ${authToken}` }
         });
         fail('Expected conflict error for duplicate email');
-      } catch (error) {
+      } catch (error: any) {
         expect(error.response.status).toBe(409);
       }
     });

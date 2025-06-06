@@ -8,7 +8,7 @@ const config: Config = {
       preset: 'ts-jest',
       testEnvironment: 'jsdom',
       setupFilesAfterEnv: ['<rootDir>/frontend/src/setupTests.ts'],
-      moduleNameMapping: {
+      moduleNameMapper: {
         '^@/(.*)$': '<rootDir>/frontend/src/$1'
       },
       collectCoverageFrom: [
@@ -23,7 +23,12 @@ const config: Config = {
       testMatch: ['<rootDir>/tests/**/*.test.ts'],
       preset: 'ts-jest',
       testEnvironment: 'node',
-      setupFilesAfterEnv: ['<rootDir>/tests/setup.ts']
+      setupFilesAfterEnv: ['<rootDir>/tests/setup.ts'],
+      globals: {
+        'ts-jest': {
+          tsconfig: '<rootDir>/tsconfig.json'
+        }
+      }
     }
   ],
   collectCoverageFrom: [
