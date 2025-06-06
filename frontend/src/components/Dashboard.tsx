@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { Layout, Typography, Card, Button, message, Space, Avatar, Dropdown } from 'antd'
-import { UserOutlined, LogoutOutlined, SettingOutlined, DashboardOutlined, BankOutlined } from '@ant-design/icons'
+import { UserOutlined, LogoutOutlined, SettingOutlined, DashboardOutlined, BankOutlined, ShoppingOutlined } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
 import axios from 'axios'
 import authService, { User } from '../services/authService'
 import CompanyList from './CompanyList'
 import ContactList from './ContactList'
+import ProductList from './ProductList'
 
 const { Header, Content } = Layout
 const { Title, Paragraph, Text } = Typography
@@ -18,7 +19,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
   const [healthStatus, setHealthStatus] = useState<any>(null)
   const [loading, setLoading] = useState(false)
   const [currentUser, setCurrentUser] = useState<User | null>(null)
-  const [currentView, setCurrentView] = useState<'dashboard' | 'companies' | 'contacts'>('dashboard')
+  const [currentView, setCurrentView] = useState<'dashboard' | 'companies' | 'contacts' | 'products'>('dashboard')
 
   useEffect(() => {
     // Kullanıcı bilgilerini al
@@ -123,6 +124,14 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
               >
                 Kişiler
               </Button>
+              <Button 
+                type={currentView === 'products' ? 'primary' : 'text'}
+                icon={<ShoppingOutlined />}
+                onClick={() => setCurrentView('products')}
+                style={{ color: currentView === 'products' ? undefined : 'white' }}
+              >
+                Ürünler
+              </Button>
             </Space>
           </div>
         </div>
@@ -146,7 +155,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
         </div>
       </Header>
       
-      <Content style={{ padding: currentView === 'companies' || currentView === 'contacts' ? '0' : '50px', background: '#f0f2f5' }}>
+      <Content style={{ padding: currentView === 'companies' || currentView === 'contacts' || currentView === 'products' ? '0' : '50px', background: '#f0f2f5' }}>
         {currentView === 'dashboard' ? (
           <div style={{ maxWidth: 1200, margin: '0 auto' }}>
             <Card style={{ marginBottom: '24px' }}>
@@ -242,8 +251,10 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
           </div>
         ) : currentView === 'companies' ? (
           <CompanyList />
-        ) : (
+        ) : currentView === 'contacts' ? (
           <ContactList />
+        ) : (
+          <ProductList />
         )}
       </Content>
     </Layout>
