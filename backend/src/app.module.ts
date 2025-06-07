@@ -8,12 +8,16 @@ import { ContactsModule } from './contacts/contacts.module';
 import { ProductsModule } from './products/products.module';
 import { AdminModule } from './admin/admin.module';
 import { VariantsModule } from './variants/variants.module';
+import { OrdersModule } from './orders/orders.module';
 import { User } from './entities/user.entity';
 import { Company } from './entities/company.entity';
 import { Contact } from './entities/contact.entity';
 import { Product } from './entities/product.entity';
 import { ProductVariant } from './entities/variant.entity';
 import { VariantAttribute } from './entities/variant-attribute.entity';
+import { Order } from './entities/order.entity';
+import { OrderLine } from './entities/order-line.entity';
+import { StockTransaction } from './entities/stock-transaction.entity';
 
 @Module({
   imports: [
@@ -24,7 +28,7 @@ import { VariantAttribute } from './entities/variant-attribute.entity';
       username: process.env.DB_USER || 'sa',
       password: process.env.DB_PASSWORD || 'FotekCRM2025!',
       database: process.env.DB_NAME || 'master',
-      entities: [User, Company, Contact, Product, ProductVariant, VariantAttribute],
+      entities: [User, Company, Contact, Product, ProductVariant, VariantAttribute, Order, OrderLine, StockTransaction],
       synchronize: true, // Only for development
       options: {
         encrypt: false,
@@ -37,6 +41,7 @@ import { VariantAttribute } from './entities/variant-attribute.entity';
     ProductsModule,
     AdminModule,
     VariantsModule,
+    OrdersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

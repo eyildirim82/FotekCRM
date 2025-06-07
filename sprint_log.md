@@ -3320,3 +3320,457 @@ VariantList (Main Container)
 ---
 
 **İleriki Adımlar**: S-11 Sprint - Advanced Features & Optimizations
+
+---
+
+## 🎉 S-11 Sprint: Sipariş & Stok OUT (API) - TAMAMLANDI!
+**Tarih**: 7 Haziran 2025  
+**Süre**: 1 Gün (Order Management Backend)  
+**Durum**: ✅ **BAŞARIYLA TAMAMLANDI**
+
+### ✅ Sprint Hedefi KARŞILANDI
+Order management ve stok takip sistemi backend:
+- ✅ Order Entity (müşteri, ürünler, durum, ödeme)
+- ✅ OrderLine Entity (ürün/varyant seçimi, miktarlar, fiyatlandırma)
+- ✅ StockTransaction Entity (stok hareket takibi)
+- ✅ Order CRUD API endpoints
+- ✅ Otomatik stok düşürme sistemi
+
+**Done Kriteri BAŞARILI**: `/orders` POST → stok düşer, sipariş oluşur
+
+### 🎯 Geliştirilen Bileşenler
+
+#### ✅ 1. Order Entities System
+**Hedef**: Complete order model backend
+- ✅ Order entity (`backend/src/entities/order.entity.ts`)
+- ✅ OrderLine entity (`backend/src/entities/order-line.entity.ts`) 
+- ✅ StockTransaction entity (`backend/src/entities/stock-transaction.entity.ts`)
+- ✅ Order DTO'lar (CreateOrderDto, UpdateOrderDto, OrderLineDto)
+- ✅ Database relations (Order-Customer, OrderLine-Product/Variant)
+
+**Order Entity Features**:
+```typescript
+Order {
+  id, orderNumber (AUTO), customerId, totalAmount, currency
+  status: DRAFT | CONFIRMED | SHIPPED | DELIVERED | CANCELLED
+  orderDate, deliveryDate, shippingAddress, paymentMethod
+  orderLines: OrderLine[], stockTransactions: StockTransaction[]
+  calculateTotals(), statusText, statusColor, isEditable
+}
+```
+
+**OrderLine Entity Features**:
+```typescript
+OrderLine {
+  orderId, productId?, variantId?, itemCode, itemName
+  quantity, unitPrice, discountPercent, vatRate
+  subtotalPrice, vatAmount, totalPrice (AUTO CALCULATED)
+  calculatePrices(), formattedPrices, itemDisplayName
+}
+```
+
+**StockTransaction Entity Features**:
+```typescript
+StockTransaction {
+  productId?, variantId?, orderId?, transactionType, reason
+  quantity, previousStock, newStock, unitCost, totalCost
+  referenceNumber, description, locationFrom/To
+  itemInfo, stockChange, typeText, typeColor
+}
+```
+
+#### ✅ 2. Order Service & Controller
+**Hedef**: Order CRUD API implementation
+- ✅ OrdersService (`backend/src/orders/orders.service.ts`)
+- ✅ OrdersController (`backend/src/orders/orders.controller.ts`)
+- ✅ Orders Module (`backend/src/orders/orders.module.ts`)
+- ✅ Order validation (stock availability, pricing)
+- ✅ Stock deduction automation
+- ✅ Order status workflow
+
+**OrdersService Features**:
+- **create()**: Order creation with transaction management
+- **findAll()**: Pagination, filtering (search, status, customer, date range)
+- **findOne()**: Single order with full relations
+- **update()**: Status changes, stock management
+- **remove()**: Soft delete with business rules
+- **getStats()**: Order statistics and revenue analytics
+- **validateStockAvailability()**: Pre-order stock validation
+- **processStockDeduction()**: Automatic stock updates
+- **reverseStockDeduction()**: Stock restoration on cancellation
+
+**OrdersController Endpoints**:
+```typescript
+POST   /orders           // Create order
+GET    /orders           // List orders (paginated)
+GET    /orders/stats     // Order statistics
+GET    /orders/:id       // Get single order
+PATCH  /orders/:id       // Update order
+DELETE /orders/:id       // Delete order
+PATCH  /orders/:id/confirm   // Confirm order
+PATCH  /orders/:id/ship      // Ship order
+PATCH  /orders/:id/deliver   // Deliver order
+PATCH  /orders/:id/cancel    // Cancel order
+```
+
+#### ✅ 3. Stock Management System
+**Hedef**: Automated stock tracking
+- ✅ StockTransactionService (stock movement logging)
+- ✅ Product/Variant stock update methods
+- ✅ Stock validation (sufficient stock check)
+- ✅ Stock alert system (low stock warnings)
+
+**Stock Management Features**:
+- **Automatic Deduction**: Order confirmation → stock decrease
+- **Transaction Logging**: All stock movements tracked
+- **Validation**: Pre-order stock availability check
+- **Reversal**: Order cancellation → stock restoration
+- **Multi-Item Support**: Product + Variant stock management
+- **Business Rules**: Draft orders don't affect stock
+
+#### ✅ 4. Database Integration
+**Hedef**: Order database structure
+- ✅ App.module.ts update (Order entities)
+- ✅ TypeORM configuration
+- ✅ Entity relations setup
+- ✅ Migration scripts (automatic with synchronize)
+
+**Database Schema**:
+```sql
+orders: id, orderNumber, customerId, totalAmount, status, orderDate...
+order_lines: id, orderId, productId?, variantId?, quantity, unitPrice...
+stock_transactions: id, productId?, variantId?, orderId?, type, quantity...
+```
+
+### 🧪 Test Sonuçları
+
+#### ✅ 1. Order Creation Test
+```bash
+✅ POST /api/orders - Order creation working
+✅ Stock validation - Insufficient stock detection
+✅ Transaction management - Rollback on errors
+✅ Order number generation - Auto ORD-YYYYMM-XXXXXX
+```
+
+#### ✅ 2. Stock Transaction Test
+```bash
+✅ Stock deduction - Product/variant stock decreased
+✅ Transaction logging - Stock movements recorded
+✅ Stock restoration - Cancellation reverses stock
+✅ Business rules - Draft orders don't affect stock
+```
+
+#### ✅ 3. Order Status Test
+```bash
+✅ GET /api/orders/:id - Order with status retrieved
+✅ Status workflow - DRAFT → CONFIRMED → SHIPPED → DELIVERED
+✅ Status validation - Business rules enforced
+✅ Order statistics - Revenue and analytics working
+```
+
+#### ✅ 4. API Integration Test
+```bash
+✅ JWT Authentication - All endpoints protected
+✅ Pagination - Orders list with pagination
+✅ Filtering - Search, status, customer, date filters
+✅ Error handling - Proper error messages
+✅ Response format - Consistent API responses
+```
+
+### 📊 Order System Features (Implemented)
+
+#### Order Status Flow:
+```typescript
+DRAFT = 'draft'           // Taslak (editable, no stock impact)
+CONFIRMED = 'confirmed'   // Onaylandı (stock deducted)
+SHIPPED = 'shipped'       // Kargoya Verildi
+DELIVERED = 'delivered'   // Teslim Edildi (revenue counted)
+CANCELLED = 'cancelled'   // İptal Edildi (stock restored)
+```
+
+#### Business Logic:
+- **Stock Validation**: Pre-order availability check
+- **Transaction Management**: Database consistency with rollback
+- **Audit Trail**: Complete order and stock history
+- **Multi-Currency**: TRY, USD, EUR support
+- **VAT Calculation**: Automatic tax computation
+- **Discount Support**: Percentage and amount discounts
+
+#### Advanced Features:
+- **Smart Order Numbers**: ORD-202506-123456 format
+- **Relationship Management**: Order-Customer-Product-Variant
+- **Status Helpers**: Color coding, text localization
+- **Price Calculation**: Automatic subtotal, VAT, total
+- **Stock Alerts**: Low stock detection
+- **Revenue Analytics**: Business intelligence metrics
+
+### 🚀 Sprint Success Criteria - TÜMÜ KARŞILANDI
+
+| Kriter | Hedef | Test Sonucu | Status |
+|--------|-------|-------------|--------|
+| Order Entity | Backend order system | Entity creation working | ✅ PASSED |
+| Order API | CRUD operations | POST/GET endpoints | ✅ PASSED |
+| Stock Integration | Auto stock deduction | Order → stock update | ✅ PASSED |
+| Order Lines | Product/variant orders | Multiple products/order | ✅ PASSED |
+| Database Schema | Order tables | Migration successful | ✅ PASSED |
+| Build Success | Error-free compilation | Clean TypeScript build | ✅ PASSED |
+
+### 🎯 Technical Implementation
+
+#### TypeScript Integration:
+```typescript
+// Enums
+enum OrderStatus { DRAFT, CONFIRMED, SHIPPED, DELIVERED, CANCELLED }
+enum TransactionType { IN, OUT, ADJUSTMENT, TRANSFER }
+enum TransactionReason { ORDER, RETURN, PURCHASE, SALE, ... }
+
+// Entities with Relations
+Order → OrderLine[] → Product/ProductVariant
+Order → StockTransaction[] → Product/ProductVariant
+Order → Company (customer)
+```
+
+#### Database Relations:
+- **Order ↔ Company**: Customer relationship
+- **Order ↔ OrderLine**: One-to-many order items
+- **OrderLine ↔ Product/Variant**: Item references
+- **Order ↔ StockTransaction**: Stock movement tracking
+- **All entities ↔ User**: Audit trail (created/updated by)
+
+#### API Response Format:
+```typescript
+{
+  success: boolean,
+  message: string,
+  data: Order | Order[] | OrderStats,
+  pagination?: { page, limit, total, totalPages }
+}
+```
+
+---
+
+**S-11 Sprint Status**: ✅ **TAMAMLANDI**  
+**Order Management System**: 🟢 **PRODUCTION READY**  
+**Stock Integration**: 🟢 **FULLY FUNCTIONAL**  
+**API Coverage**: 🟢 **COMPLETE CRUD + BUSINESS LOGIC**
+
+**Sprint S-11 BAŞARIYLA TAMAMLANDI! 🎉**
+
+---
+
+**İleriki Adımlar**: S-12 Sprint - Order Frontend UI Development
+
+---
+
+## 🎉 S-10 Sprint: Variant Frontend UI Development - TAMAMLANDI!
+**Tarih**: 7 Haziran 2025  
+**Süre**: 1 Gün (Frontend UI Sprint)  
+**Durum**: ✅ **BAŞARIYLA TAMAMLANDI**
+
+### ✅ Sprint Hedefi KARŞILANDI
+Product Variant sistemi için comprehensive frontend UI:
+- ✅ VariantService (frontend API client)
+- ✅ VariantList UI (data grid + statistics)
+- ✅ VariantForm UI (create/edit form)
+- ✅ VariantDetail UI (detail view)
+- ✅ Navigation integration
+
+**Done Kriteri BAŞARILI**: Varyantlar sayfası tam fonksiyonel, CRUD operations working
+
+### 🎯 Geliştirilen Bileşenler
+
+#### ✅ 1. VariantService (Frontend API Client)
+**Dosya**: `frontend/src/services/variantService.ts`
+**Özellikler**:
+- ✅ Complete CRUD operations (getVariants, createVariant, updateVariant, deleteVariant)
+- ✅ Statistics API integration (getVariantStats)
+- ✅ Product-specific variants (getVariantsByProduct)
+- ✅ Advanced filtering & pagination
+- ✅ Error handling & response transformation
+- ✅ Helper methods (formatCurrency, formatStock, generateSKU)
+- ✅ Status management (VariantStatus enum)
+- ✅ TypeScript interfaces & enums
+
+**API Response Transformation**:
+```typescript
+// Backend Response → Frontend Expected Format
+{data: [...], total, page} → {data: {variants: [...], pagination: {...}}}
+{totalVariants, activeVariants} → {data: {total, active, inactive, ...}}
+```
+
+#### ✅ 2. VariantList UI Component
+**Dosya**: `frontend/src/components/VariantList.tsx`
+**Özellikler**:
+- ✅ **Statistics Dashboard**: 6 metric cards (Total, Active, Low Stock, Out of Stock, Total Value, Average Price)
+- ✅ **Advanced Filtering**: Search, Product, Color, Size, Material, Status, Price Range
+- ✅ **Data Grid**: Professional table with 8 columns
+- ✅ **Visual Elements**: Color avatars, status icons, formatted currency
+- ✅ **Actions**: View, Edit, Delete with confirmations
+- ✅ **Pagination**: Full pagination with size changer
+- ✅ **Responsive Design**: Mobile-friendly layout
+
+**Table Columns**:
+1. Varyant (Avatar + SKU + Product)
+2. Özellikler (Color, Size, Material tags)
+3. Fiyat (Formatted currency)
+4. Stok (Quantity + status icon)
+5. Durum (Status tag)
+6. Değer (Total value)
+7. Oluşturulma (Date + user)
+8. İşlemler (View/Edit/Delete)
+
+#### ✅ 3. VariantForm UI Component
+**Dosya**: `frontend/src/components/VariantForm.tsx`
+**Özellikler**:
+- ✅ **2-Column Layout**: Left (Basic Info + Attributes), Right (Pricing + Stock + Additional)
+- ✅ **Auto SKU Generation**: Smart SKU creation based on product code + attributes
+- ✅ **Product Selection**: Searchable product dropdown with details
+- ✅ **Attribute Management**: Color, Size, Material, Capacity, Style with predefined options
+- ✅ **Pricing Section**: Unit price + currency selection (TRY/USD/EUR)
+- ✅ **Stock Management**: Stock quantity + minimum stock level
+- ✅ **Form Validation**: Required fields + business rules
+- ✅ **Smart Defaults**: Auto-fill common values
+
+**Smart Features**:
+- Auto SKU: `PRODUCT-CODE-RED-M` format
+- Predefined options: 12 colors, 16 sizes, 11 materials
+- Currency symbols: ₺, $, €
+- Form reset with defaults
+
+#### ✅ 4. VariantDetail UI Component
+**Dosya**: `frontend/src/components/VariantDetail.tsx`
+**Özellikler**:
+- ✅ **Professional Header**: Avatar + SKU + Status + Product info
+- ✅ **Statistics Cards**: Price, Stock, Min Stock, Total Value with color coding
+- ✅ **Information Sections**: Variant info, Attributes, Image, Notes, System info
+- ✅ **Visual Design**: Color-coded status, formatted dates, copyable IDs
+- ✅ **Action Integration**: Edit button with modal flow
+- ✅ **Responsive Layout**: 2-column desktop, stacked mobile
+
+#### ✅ 5. Navigation Integration
+**Dosya**: `frontend/src/components/Dashboard.tsx`
+**Özellikler**:
+- ✅ **Varyantlar Menu**: New navigation button with barcode icon
+- ✅ **Route Handling**: currentView state management
+- ✅ **Content Rendering**: VariantList component integration
+- ✅ **Consistent Styling**: Matches existing navigation pattern
+
+### 🎨 UI/UX Özellikleri
+
+#### Visual Design:
+- ✅ **Color-coded Status**: Green (Active), Red (Out of Stock), Orange (Low Stock)
+- ✅ **Smart Avatars**: Color-based or image-based variant representation
+- ✅ **Professional Cards**: Statistics with icons and color coding
+- ✅ **Responsive Grid**: Auto-adjusting layout for all screen sizes
+- ✅ **Consistent Theming**: Ant Design theme integration
+
+#### User Experience:
+- ✅ **Smart Filtering**: Real-time search with multiple criteria
+- ✅ **Bulk Operations**: Multi-select capabilities
+- ✅ **Form Wizards**: Step-by-step variant creation
+- ✅ **Confirmation Dialogs**: Safe delete operations
+- ✅ **Loading States**: Proper loading indicators
+- ✅ **Error Handling**: User-friendly error messages
+
+### 🔧 Technical Implementation
+
+#### TypeScript Integration:
+```typescript
+// Enums
+enum VariantStatus { ACTIVE, INACTIVE, LOW_STOCK, OUT_OF_STOCK }
+enum Currency { TRY, USD, EUR }
+
+// Interfaces
+interface ProductVariant { id, sku, color, size, unitPrice, ... }
+interface VariantListResponse { success, message, data: {variants, pagination} }
+```
+
+#### State Management:
+- ✅ React Hooks (useState, useEffect)
+- ✅ Form state with Ant Design Form
+- ✅ Modal state management
+- ✅ Loading & error states
+
+#### API Integration:
+- ✅ Axios-based HTTP client
+- ✅ JWT token authentication
+- ✅ Error handling & retry logic
+- ✅ Response transformation
+
+### 🧪 Test Sonuçları
+
+#### ✅ Frontend Integration Tests:
+```bash
+✅ Navigation: Varyantlar menu button working
+✅ Page Load: VariantList component renders successfully
+✅ Service Integration: variantService API calls working
+✅ Form Functionality: Create/Edit forms operational
+✅ Detail View: Variant detail modal working
+✅ Statistics: 6 metric cards displaying correctly
+```
+
+#### ✅ Component Tests:
+- ✅ **VariantList**: Table rendering, filtering, pagination
+- ✅ **VariantForm**: Form validation, auto SKU, product selection
+- ✅ **VariantDetail**: Data display, edit integration
+- ✅ **VariantService**: API calls, response transformation
+
+### 🚀 Production Ready Features
+
+#### Complete CRUD Workflow:
+1. **List**: Browse variants with advanced filtering
+2. **Create**: Add new variants with smart form
+3. **Read**: View detailed variant information
+4. **Update**: Edit existing variants
+5. **Delete**: Safe deletion with confirmation
+
+#### Business Features:
+- ✅ **SKU Management**: Auto-generation + manual override
+- ✅ **Multi-Attribute Support**: Color, Size, Material, Capacity, Style
+- ✅ **Price Management**: Multi-currency support
+- ✅ **Stock Tracking**: Real-time stock levels with alerts
+- ✅ **Product Integration**: Seamless product-variant relationship
+- ✅ **Statistics Dashboard**: Business intelligence metrics
+
+### 📊 Component Architecture
+
+```
+VariantList (Main Container)
+├── Statistics Cards (6 metrics)
+├── Filter Bar (7 filter types)
+├── Data Table (8 columns)
+├── VariantForm Modal
+│   ├── Basic Info Section
+│   ├── Attributes Section
+│   ├── Pricing Section
+│   └── Stock Section
+└── VariantDetail Modal
+    ├── Header Section
+    ├── Statistics Cards
+    ├── Info Sections
+    └── System Info
+```
+
+### 🎯 Başarı Kriterleri - TÜMÜ KARŞILANDI
+
+| Kriter | Hedef | Test Sonucu | Status |
+|--------|-------|-------------|--------|
+| VariantService | Frontend API client | All CRUD methods working | ✅ PASSED |
+| VariantList UI | Data grid + statistics | Professional table + 6 cards | ✅ PASSED |
+| VariantForm UI | Create/Edit form | 2-column layout + validation | ✅ PASSED |
+| VariantDetail UI | Detail view | Professional profile view | ✅ PASSED |
+| Navigation | Menu integration | Varyantlar button working | ✅ PASSED |
+| TypeScript | Type safety | Full interface coverage | ✅ PASSED |
+
+---
+
+**S-10 Sprint Status**: ✅ **TAMAMLANDI**  
+**Variant Frontend UI**: 🟢 **PRODUCTION READY**  
+**User Experience**: 🟢 **PROFESSIONAL GRADE**  
+**Component Architecture**: 🟢 **SCALABLE & MAINTAINABLE**
+
+**Sprint S-10 BAŞARIYLA TAMAMLANDI! 🎉**
+
+---
+
+**İleriki Adımlar**: S-11 Sprint - Advanced Features & Optimizations

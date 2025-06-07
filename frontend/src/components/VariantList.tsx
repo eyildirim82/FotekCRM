@@ -31,11 +31,10 @@ import {
   CheckCircleOutlined,
   StopOutlined,
   WarningOutlined,
-  BarcodeOutlined,
-  ColorPicker
+  BarcodeOutlined
 } from '@ant-design/icons'
 import type { ColumnsType } from 'antd/es/table'
-import variantService, { ProductVariant, VariantStatus, Currency } from '../services/variantService'
+import variantService, { ProductVariant, VariantStatus } from '../services/variantService'
 import productService, { Product } from '../services/productService'
 import VariantForm from './VariantForm'
 import VariantDetail from './VariantDetail'
