@@ -494,7 +494,7 @@ const ContactList: React.FC = () => {
         }}
         footer={null}
         width={800}
-        destroyOnClose
+        destroyOnHidden
       >
         <ContactForm
           contact={editingContact}

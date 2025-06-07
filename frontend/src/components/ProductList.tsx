@@ -15,7 +15,8 @@ import {
   Typography,
   Statistic,
   Avatar,
-  InputNumber
+  InputNumber,
+  message
 } from 'antd'
 import {
   PlusOutlined,

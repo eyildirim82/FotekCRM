@@ -414,7 +414,7 @@ const CompanyList: React.FC = () => {
         }}
         footer={null}
         width={800}
-        destroyOnClose
+        destroyOnHidden
       >
         <CompanyForm
           company={editingCompany}

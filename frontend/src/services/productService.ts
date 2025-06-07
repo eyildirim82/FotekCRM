@@ -304,7 +304,23 @@ class ProductService {
         : '/api/products/stats'
       
       const response = await apiClient.get(url)
-      return response.data
+      
+      // Transform backend response to expected format
+      const transformedData = {
+        success: true,
+        message: 'İstatistikler başarıyla alındı',
+        data: {
+          total: response.data.totalProducts || 0,
+          active: response.data.activeProducts || 0,
+          inactive: (response.data.totalProducts || 0) - (response.data.activeProducts || 0),
+          lowStock: response.data.lowStockProducts || 0,
+          outOfStock: response.data.outOfStockProducts || 0,
+          totalValue: response.data.totalValue || 0,
+          averageProfitMargin: response.data.averageProfitMargin || 0
+        }
+      }
+      
+      return transformedData
     } catch (error: any) {
       console.error('Get product stats error:', error)
       throw new Error(this.getErrorMessage(error, 'Ürün istatistikleri alınırken hata oluştu'))
