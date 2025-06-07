@@ -28,7 +28,7 @@
     "tests/**/*",
     "jest.config.ts",
     "backend/src/**/*",
-    "frontend/src/**/*"
+    "frontend/src/**/*.d.ts"
   ],
   "exclude": [
     "node_modules",

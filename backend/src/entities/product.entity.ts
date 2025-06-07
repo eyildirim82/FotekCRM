@@ -90,5 +90,5 @@ export class Product {
   updatedAt: Date;
 
   @DeleteDateColumn()
-  deletedAt: Date;
+  deletedAt: Date | null;
 } 

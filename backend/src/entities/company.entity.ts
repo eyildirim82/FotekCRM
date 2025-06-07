@@ -47,10 +47,10 @@ export class Company {
 
   // Relations
   @ManyToOne(() => User, { nullable: false })
-  @JoinColumn({ name: 'createdBy' })
+  @JoinColumn({ name: 'createdById' })
   createdBy: User;
 
-  @Column({ name: 'createdBy' })
+  @Column({ name: 'createdById' })
   createdById: string;
 
   @CreateDateColumn()

@@ -78,5 +78,5 @@ export class ProductVariant {
   updatedAt: Date;
 
   @DeleteDateColumn()
-  deletedAt: Date;
+  deletedAt: Date | null;
 } 

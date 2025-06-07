@@ -20,7 +20,7 @@ import { VariantAttribute } from './entities/variant-attribute.entity';
     TypeOrmModule.forRoot({
       type: 'mssql',
       host: process.env.DB_HOST || 'db',
-      port: parseInt(process.env.DB_PORT) || 1433,
+      port: parseInt(process.env.DB_PORT || '1433', 10),
       username: process.env.DB_USER || 'sa',
       password: process.env.DB_PASSWORD || 'FotekCRM2025!',
       database: process.env.DB_NAME || 'master',
