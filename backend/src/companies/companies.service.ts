@@ -83,13 +83,7 @@ export class CompaniesService {
 
   // Get single company by ID
   async findOne(id: string): Promise<Company> {
-    const company = await this.findOneWithRelations(id);
-    
-    if (!company) {
-      throw new NotFoundException(`ID'si ${id} olan firma bulunamadı`);
-    }
-
-    return company;
+    return this.findOneWithRelations(id);
   }
 
   // Update company
@@ -118,11 +112,17 @@ export class CompaniesService {
   }
 
   // Helper method to find company with relations
-  private async findOneWithRelations(id: string): Promise<Company | null> {
-    return this.companyRepository.findOne({
+  private async findOneWithRelations(id: string): Promise<Company> {
+    const company = await this.companyRepository.findOne({
       where: { id, isActive: true },
       relations: ['createdBy'],
     });
+
+    if (!company) {
+      throw new NotFoundException(`ID'si ${id} olan firma bulunamadı`);
+    }
+
+    return company;
   }
 
   // Get company statistics

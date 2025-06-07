@@ -54,5 +54,5 @@ export class VariantAttribute {
   updatedAt: Date;
 
   @DeleteDateColumn()
-  deletedAt: Date;
+  deletedAt: Date | null;
 } 
