@@ -59,10 +59,16 @@ export class ProductsService {
     };
   }
 
-  async findOne(id: number): Promise<Product> {
+  async findOne(id: number, includeVariants: boolean = false): Promise<Product> {
+    const relations = ['company', 'createdBy', 'updatedBy'];
+    
+    if (includeVariants) {
+      relations.push('variants');
+    }
+
     const product = await this.productRepository.findOne({
       where: { id, deletedAt: null },
-      relations: ['company', 'createdBy', 'updatedBy'],
+      relations,
     });
 
     if (!product) {

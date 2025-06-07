@@ -208,10 +208,16 @@ class ProductService {
       
       // Enhance products with computed properties
       const enhancedData = {
-        ...response.data,
+        success: true,
+        message: 'Ürünler başarıyla listelendi',
         data: {
-          ...response.data.data,
-          products: response.data.data.products.map((product: Product) => this.enhanceProduct(product))
+          products: response.data.data.map((product: Product) => this.enhanceProduct(product)),
+          pagination: {
+            page: response.data.page,
+            limit: response.data.limit,
+            total: response.data.total,
+            pages: response.data.totalPages
+          }
         }
       }
       
@@ -229,8 +235,9 @@ class ProductService {
       
       // Enhance product with computed properties
       const enhancedData = {
-        ...response.data,
-        data: this.enhanceProduct(response.data.data)
+        success: true,
+        message: 'Ürün başarıyla alındı',
+        data: this.enhanceProduct(response.data)
       }
       
       return enhancedData
@@ -247,8 +254,9 @@ class ProductService {
       
       // Enhance product with computed properties
       const enhancedData = {
-        ...response.data,
-        data: this.enhanceProduct(response.data.data)
+        success: true,
+        message: 'Ürün başarıyla oluşturuldu',
+        data: this.enhanceProduct(response.data)
       }
       
       return enhancedData
@@ -265,8 +273,9 @@ class ProductService {
       
       // Enhance product with computed properties
       const enhancedData = {
-        ...response.data,
-        data: this.enhanceProduct(response.data.data)
+        success: true,
+        message: 'Ürün başarıyla güncellendi',
+        data: this.enhanceProduct(response.data)
       }
       
       return enhancedData

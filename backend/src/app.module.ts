@@ -6,10 +6,14 @@ import { AuthModule } from './auth/auth.module';
 import { CompaniesModule } from './companies/companies.module';
 import { ContactsModule } from './contacts/contacts.module';
 import { ProductsModule } from './products/products.module';
+import { AdminModule } from './admin/admin.module';
+import { VariantsModule } from './variants/variants.module';
 import { User } from './entities/user.entity';
 import { Company } from './entities/company.entity';
 import { Contact } from './entities/contact.entity';
 import { Product } from './entities/product.entity';
+import { ProductVariant } from './entities/variant.entity';
+import { VariantAttribute } from './entities/variant-attribute.entity';
 
 @Module({
   imports: [
@@ -20,7 +24,7 @@ import { Product } from './entities/product.entity';
       username: process.env.DB_USER || 'sa',
       password: process.env.DB_PASSWORD || 'FotekCRM2025!',
       database: process.env.DB_NAME || 'master',
-      entities: [User, Company, Contact, Product],
+      entities: [User, Company, Contact, Product, ProductVariant, VariantAttribute],
       synchronize: true, // Only for development
       options: {
         encrypt: false,
@@ -31,6 +35,8 @@ import { Product } from './entities/product.entity';
     CompaniesModule,
     ContactsModule,
     ProductsModule,
+    AdminModule,
+    VariantsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

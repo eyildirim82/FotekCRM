@@ -8,8 +8,8 @@ on:
 
 env:
   REGISTRY: docker.io
-  BACKEND_IMAGE: fotekcrm/backend
-  FRONTEND_IMAGE: fotekcrm/frontend
+  BACKEND_IMAGE: erkanyildirim82/backend
+  FRONTEND_IMAGE: erkanyildirim82/frontend
 
 jobs:
   test:

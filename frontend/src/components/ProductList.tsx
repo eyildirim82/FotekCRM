@@ -559,7 +559,7 @@ const ProductList: React.FC = () => {
               </Select>
             </Col>
             <Col span={4}>
-              <Input.Group compact>
+              <Space.Compact style={{ width: '100%' }}>
                 <InputNumber
                   placeholder="Min Fiyat"
                   style={{ width: '50%' }}
@@ -574,7 +574,7 @@ const ProductList: React.FC = () => {
                   precision={2}
                   onChange={(value) => handlePriceRangeFilter(filters.minPrice, value?.toString() || '')}
                 />
-              </Input.Group>
+              </Space.Compact>
             </Col>
           </Row>
         </div>
@@ -602,7 +602,7 @@ const ProductList: React.FC = () => {
         }}
         footer={null}
         width={900}
-        destroyOnClose
+        destroyOnHidden
       >
         <ProductForm
           product={editingProduct}

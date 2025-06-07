@@ -1,6 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
 import { User } from './user.entity';
 import { Company } from './company.entity';
+import { ProductVariant } from './variant.entity';
 
 @Entity('products')
 export class Product {
@@ -76,6 +77,10 @@ export class Product {
 
   @Column({ nullable: true })
   updatedById: number;
+
+  // Product Variants ilişkisi
+  @OneToMany(() => ProductVariant, variant => variant.product, { cascade: true })
+  variants: ProductVariant[];
 
   // Timestamp alanları
   @CreateDateColumn()
