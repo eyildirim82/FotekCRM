@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Layout, Typography, Card, Button, message, Space, Avatar, Dropdown } from 'antd'
-import { UserOutlined, LogoutOutlined, SettingOutlined, DashboardOutlined, BankOutlined, ShoppingOutlined, ToolOutlined, BarcodeOutlined } from '@ant-design/icons'
+import { UserOutlined, LogoutOutlined, SettingOutlined, DashboardOutlined, BankOutlined, ShoppingOutlined, ToolOutlined, BarcodeOutlined, ShoppingCartOutlined } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
 import axios from 'axios'
 import authService, { User } from '../services/authService'
@@ -8,6 +8,7 @@ import CompanyList from './CompanyList'
 import ContactList from './ContactList'
 import ProductList from './ProductList'
 import VariantList from './VariantList'
+import OrderList from './OrderList'
 import AdminPanel from './AdminPanel'
 
 const { Header, Content } = Layout
@@ -21,7 +22,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
   const [healthStatus, setHealthStatus] = useState<any>(null)
   const [loading, setLoading] = useState(false)
   const [currentUser, setCurrentUser] = useState<User | null>(null)
-  const [currentView, setCurrentView] = useState<'dashboard' | 'companies' | 'contacts' | 'products' | 'variants' | 'admin'>('dashboard')
+  const [currentView, setCurrentView] = useState<'dashboard' | 'companies' | 'contacts' | 'products' | 'variants' | 'orders' | 'admin'>('dashboard')
 
   useEffect(() => {
     // Kullanıcı bilgilerini al
@@ -37,10 +38,10 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
     try {
       const response = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/health`)
       setHealthStatus(response.data)
-      message.success('API bağlantısı başarılı!')
+      // Use App.useApp() for context-aware messages instead
     } catch (error) {
       console.error('API bağlantı hatası:', error)
-      message.error('API bağlantısı başarısız!')
+      // message.error('API bağlantısı başarısız!') // Commented to avoid antd context warning
       setHealthStatus(null)
     } finally {
       setLoading(false)
@@ -142,6 +143,14 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
               >
                 Varyantlar
               </Button>
+              <Button 
+                type={currentView === 'orders' ? 'primary' : 'text'}
+                icon={<ShoppingCartOutlined />}
+                onClick={() => setCurrentView('orders')}
+                style={{ color: currentView === 'orders' ? undefined : 'white' }}
+              >
+                Siparişler
+              </Button>
               {currentUser?.role === 'admin' && (
                 <Button 
                   type={currentView === 'admin' ? 'primary' : 'text'}
@@ -175,7 +184,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
         </div>
       </Header>
       
-      <Content style={{ padding: currentView === 'companies' || currentView === 'contacts' || currentView === 'products' || currentView === 'variants' || currentView === 'admin' ? '0' : '50px', background: '#f0f2f5' }}>
+      <Content style={{ padding: currentView === 'companies' || currentView === 'contacts' || currentView === 'products' || currentView === 'variants' || currentView === 'orders' || currentView === 'admin' ? '0' : '50px', background: '#f0f2f5' }}>
         {currentView === 'dashboard' ? (
           <div style={{ maxWidth: 1200, margin: '0 auto' }}>
             <Card style={{ marginBottom: '24px' }}>
@@ -277,6 +286,8 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
           <ProductList />
         ) : currentView === 'variants' ? (
           <VariantList />
+        ) : currentView === 'orders' ? (
+          <OrderList />
         ) : currentView === 'admin' ? (
           <AdminPanel />
         ) : null}
