@@ -26,7 +26,7 @@ import { StockTransaction } from './entities/stock-transaction.entity';
       host: process.env.DB_HOST || 'db',
       port: parseInt(process.env.DB_PORT || '1433', 10),
       username: process.env.DB_USER || 'sa',
-      password: process.env.DB_PASSWORD || 'FotekCRM2025!',
+      password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME || 'master',
       entities: [User, Company, Contact, Product, ProductVariant, VariantAttribute, Order, OrderLine, StockTransaction],
       synchronize: true, // Only for development

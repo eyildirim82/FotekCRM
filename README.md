@@ -36,12 +36,18 @@ Fotek CRM projesinin Minimum Viable Product (MVP) versiyonudur. Bu proje atomic 
    cd FotekCRM
    ```
 
-2. **Docker Compose ile servisleri başlatın:**
+2. **.env dosyasını oluşturun:**
+   ```bash
+   cp .env.example .env
+   # .env içindeki DB_PASSWORD ve JWT_SECRET değerlerini güncelleyin
+   ```
+
+3. **Docker Compose ile servisleri başlatın:**
    ```bash
    docker compose up --build
    ```
 
-3. **Servislerin durumunu kontrol edin:**
+4. **Servislerin durumunu kontrol edin:**
    - Frontend: http://localhost:80
    - API Health: http://localhost:3000/api/health
    - Database: localhost:1433
@@ -72,7 +78,7 @@ Fotek CRM projesinin Minimum Viable Product (MVP) versiyonudur. Bu proje atomic 
 
 3. **Database Bağlantısı:**
    ```bash
-   docker exec -it fotek_db /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'FotekCRM2025!'
+   docker exec -it fotek_db /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "$DB_PASSWORD"
    ```
 
 4. **Container Durumları:**
