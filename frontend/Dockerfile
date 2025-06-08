@@ -1,19 +1,13 @@
-FROM node:18-alpine
-
-# Çalışma dizini oluştur
+# Build stage
+FROM node:18-alpine AS build
 WORKDIR /app
-
-# Package dosyalarını kopyala
 COPY package*.json ./
-
-# Bağımlılıkları yükle
-RUN npm install
-
-# Kaynak kodunu kopyala
+RUN npm ci
 COPY . .
+RUN npm run build
 
-# Port aç
-EXPOSE 5173
-
-# Development server'ı başlat
-CMD ["npm", "run", "dev"] 
+# Production stage
+FROM nginx:alpine
+COPY --from=build /app/dist /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
