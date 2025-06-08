@@ -18,6 +18,7 @@ services:
       timeout: 10s
       retries: 5
       start_period: 60s
+    restart: always
 
   # NestJS API
   api:
@@ -25,6 +26,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     container_name: fotek_api
+    restart: always
     ports:
       - "3000:3000"
     environment:
@@ -48,8 +50,9 @@ services:
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     container_name: fotek_frontend
+    restart: always
     ports:
       - "5173:5173"
     environment:
@@ -61,6 +64,7 @@ services:
   nginx:
     image: nginx:alpine
     container_name: fotek_nginx
+    restart: always
     ports:
       - "80:80"
       - "443:443"
@@ -70,6 +74,11 @@ services:
     depends_on:
       - frontend
       - api
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   # Backup Service
   backup:

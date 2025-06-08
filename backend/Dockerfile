@@ -1,29 +1,19 @@
-FROM node:18-alpine
-
-# Curl ve build tools yükle
+# Build stage
+FROM node:18-alpine AS build
 RUN apk add --no-cache curl python3 make g++
-
-# Çalışma dizini oluştur
 WORKDIR /app
-
-# Package dosyalarını kopyala
 COPY package*.json ./
-
-# Bağımlılıkları yükle
-RUN npm install
-
-# Kaynak kodunu kopyala
+RUN npm ci
 COPY . .
-
-# Uygulamayı build et
 RUN npm run build
 
-# Port aç
+# Production stage
+FROM node:18-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --omit=dev
+COPY --from=build /app/dist ./dist
 EXPOSE 3000
-
-# Health check ekle
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   CMD curl -f http://localhost:3000/api/health || exit 1
-
-# Uygulamayı çalıştır
-CMD ["npm", "run", "start:prod"] 
+CMD ["node", "dist/src/main"]

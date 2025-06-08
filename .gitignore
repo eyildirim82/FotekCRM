@@ -51,6 +51,9 @@ Thumbs.db
 
 # Docker
 .dockerignore
+!.dockerignore
+!frontend/.dockerignore
+!backend/.dockerignore
 
 # Cache directories
 .npm
