@@ -24,10 +24,10 @@ const config: Config = {
       preset: 'ts-jest',
       testEnvironment: 'node',
       setupFilesAfterEnv: ['<rootDir>/tests/setup.ts'],
-      globals: {
-        'ts-jest': {
+      transform: {
+        '^.+\\.ts$': ['ts-jest', {
           tsconfig: '<rootDir>/tsconfig.json'
-        }
+        }]
       }
     }
   ],

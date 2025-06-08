@@ -53,7 +53,7 @@ describe('Contact Management Integration Tests', () => {
 
     // Login to get auth token
     const loginResponse = await axios.post(`${API_URL}/auth/login`, testUser);
-    authToken = loginResponse.data.data.token;
+    authToken = loginResponse.data.access_token;
 
     // Create test company
     const companyResponse = await axios.post(`${API_URL}/companies`, testCompany, {
