@@ -1,0 +1,42 @@
+{
+  "invoiceNumber": "SAT2025000001",
+  "type": "sales",
+  "invoiceDate": "2025-06-08",
+  "dueDate": "2025-07-08",
+  "customerName": "Test Müşteri A.Ş.",
+  "customerAddress": "İstanbul, Türkiye",
+  "customerTaxNumber": "1234567890",
+  "lines": [
+    {
+      "description": "Laptop Bilgisayar",
+      "productCode": "LP001",
+      "unit": "Adet",
+      "quantity": 2,
+      "unitPrice": 15000,
+      "discountPercent": 10,
+      "vatRate": 20
+    },
+    {
+      "description": "Wireless Mouse",
+      "productCode": "MS001", 
+      "unit": "Adet",
+      "quantity": 5,
+      "unitPrice": 250,
+      "discountPercent": 0,
+      "vatRate": 20
+    },
+    {
+      "description": "Yazılım Lisansı",
+      "productCode": "SW001",
+      "unit": "Lisans",
+      "quantity": 1,
+      "unitPrice": 5000,
+      "discountPercent": 5,
+      "vatRate": 0
+    }
+  ],
+  "notes": "30 gün vadeli ödeme",
+  "terms": "Mallar teslim alındıktan sonra iade kabul edilmez.",
+  "currency": "TRY",
+  "exchangeRate": 1
+} 

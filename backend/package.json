@@ -25,7 +25,10 @@
     "@nestjs/mapped-types": "^2.1.0",
     "@nestjs/passport": "^10.0.3",
     "@nestjs/platform-express": "^10.3.0",
+    "@nestjs/schedule": "^6.0.0",
     "@nestjs/typeorm": "^10.0.1",
+    "@types/xml2js": "^0.4.14",
+    "axios": "^1.6.2",
     "bcryptjs": "^2.4.3",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
@@ -34,7 +37,8 @@
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
     "reflect-metadata": "^0.2.1",
-    "typeorm": "^0.3.19"
+    "typeorm": "^0.3.19",
+    "xml2js": "^0.6.2"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.3.0",

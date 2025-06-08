@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from 'react'
-import { Layout, Typography, Card, Button, message, Space, Avatar, Dropdown } from 'antd'
-import { UserOutlined, LogoutOutlined, SettingOutlined, DashboardOutlined, BankOutlined, ShoppingOutlined, ToolOutlined, BarcodeOutlined, ShoppingCartOutlined } from '@ant-design/icons'
+import { Layout, Typography, Card, Button, message, Space, Avatar, Dropdown, Row, Col, Statistic } from 'antd'
+import { UserOutlined, LogoutOutlined, SettingOutlined, DashboardOutlined, BankOutlined, ShoppingOutlined, ToolOutlined, BarcodeOutlined, ShoppingCartOutlined, DollarOutlined, FileTextOutlined, ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
 import axios from 'axios'
 import authService, { User } from '../services/authService'
+import DashboardAnalytics from './DashboardAnalytics'
 import CompanyList from './CompanyList'
 import ContactList from './ContactList'
 import ProductList from './ProductList'
 import VariantList from './VariantList'
 import OrderList from './OrderList'
 import AdminPanel from './AdminPanel'
+import ExchangeRatesList from './ExchangeRates/ExchangeRatesList'
+import InvoicesList from './Invoices/InvoicesList'
+import InvoiceForm from './Invoices/InvoiceForm'
 
 const { Header, Content } = Layout
 const { Title, Paragraph, Text } = Typography
@@ -22,7 +26,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
   const [healthStatus, setHealthStatus] = useState<any>(null)
   const [loading, setLoading] = useState(false)
   const [currentUser, setCurrentUser] = useState<User | null>(null)
-  const [currentView, setCurrentView] = useState<'dashboard' | 'companies' | 'contacts' | 'products' | 'variants' | 'orders' | 'admin'>('dashboard')
+  const [currentView, setCurrentView] = useState<'dashboard' | 'companies' | 'contacts' | 'products' | 'variants' | 'orders' | 'admin' | 'exchange-rates' | 'invoices' | 'invoices-new'>('dashboard')
 
   useEffect(() => {
     // Kullanıcı bilgilerini al
@@ -47,6 +51,8 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
       setLoading(false)
     }
   }
+
+
 
   const handleLogout = () => {
     authService.logout()
@@ -151,6 +157,22 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
               >
                 Siparişler
               </Button>
+              <Button 
+                type={currentView === 'exchange-rates' ? 'primary' : 'text'}
+                icon={<DollarOutlined />}
+                onClick={() => setCurrentView('exchange-rates')}
+                style={{ color: currentView === 'exchange-rates' ? undefined : 'white' }}
+              >
+                Döviz Kurları
+              </Button>
+              <Button 
+                type={currentView === 'invoices' ? 'primary' : 'text'}
+                icon={<FileTextOutlined />}
+                onClick={() => setCurrentView('invoices')}
+                style={{ color: currentView === 'invoices' ? undefined : 'white' }}
+              >
+                Faturalar
+              </Button>
               {currentUser?.role === 'admin' && (
                 <Button 
                   type={currentView === 'admin' ? 'primary' : 'text'}
@@ -184,100 +206,9 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
         </div>
       </Header>
       
-      <Content style={{ padding: currentView === 'companies' || currentView === 'contacts' || currentView === 'products' || currentView === 'variants' || currentView === 'orders' || currentView === 'admin' ? '0' : '50px', background: '#f0f2f5' }}>
+      <Content style={{ padding: currentView === 'companies' || currentView === 'contacts' || currentView === 'products' || currentView === 'variants' || currentView === 'orders' || currentView === 'admin' || currentView === 'exchange-rates' || currentView === 'invoices' || currentView === 'invoices-new' ? '0' : '50px', background: '#f0f2f5' }}>
         {currentView === 'dashboard' ? (
-          <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-            <Card style={{ marginBottom: '24px' }}>
-              <Title level={2}>Dashboard 📊</Title>
-              <Paragraph>
-                Fotek CRM'e hoş geldiniz! Bu, S-6 sprint'inin başarılı bir şekilde tamamlandığını 
-                gösteren dashboard sayfasıdır.
-              </Paragraph>
-            </Card>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
-            {/* Kullanıcı Bilgileri */}
-            <Card title="👤 Kullanıcı Bilgileri" size="small">
-              {currentUser && (
-                <Space direction="vertical" style={{ width: '100%' }}>
-                  <Text><strong>ID:</strong> {currentUser.id}</Text>
-                  <Text><strong>Email:</strong> {currentUser.email}</Text>
-                  <Text><strong>Ad:</strong> {currentUser.firstName}</Text>
-                  <Text><strong>Soyad:</strong> {currentUser.lastName}</Text>
-                  <Text><strong>Rol:</strong> 
-                    <span style={{ 
-                      marginLeft: '8px',
-                      padding: '2px 8px',
-                      background: currentUser.role === 'admin' ? '#ff4d4f' : '#52c41a',
-                      color: 'white',
-                      borderRadius: '4px',
-                      fontSize: '12px'
-                    }}>
-                      {currentUser.role.toUpperCase()}
-                    </span>
-                  </Text>
-                </Space>
-              )}
-            </Card>
-
-            {/* API Durumu */}
-            <Card title="🔌 API Durumu" size="small">
-              {healthStatus ? (
-                <Space direction="vertical" style={{ width: '100%' }}>
-                  <Text><strong>Durum:</strong> 
-                    <span style={{ color: '#52c41a', marginLeft: '8px' }}>✅ {healthStatus.status}</span>
-                  </Text>
-                  <Text><strong>Servis:</strong> {healthStatus.service}</Text>
-                  <Text><strong>Versiyon:</strong> {healthStatus.version}</Text>
-                  <Text><strong>Ortam:</strong> {healthStatus.environment}</Text>
-                  <Text><strong>Zaman:</strong> {new Date(healthStatus.timestamp).toLocaleString('tr-TR')}</Text>
-                </Space>
-              ) : (
-                <Text type="danger">❌ API bağlantısı kurulamadı</Text>
-              )}
-              
-              <Button 
-                type="primary" 
-                onClick={checkApiHealth} 
-                loading={loading}
-                style={{ marginTop: 16, width: '100%' }}
-                size="small"
-              >
-                Durumu Yenile
-              </Button>
-            </Card>
-
-            {/* Tamamlanan Özellikler */}
-            <Card title="✅ Tamamlanan Özellikler" size="small">
-              <Space direction="vertical" style={{ width: '100%' }}>
-                <Text>🐳 Docker Compose yapılandırması</Text>
-                <Text>🔧 NestJS API + Health Check</Text>
-                <Text>⚛️ React Vite Frontend</Text>
-                <Text>🗄️ MSSQL Veritabanı</Text>
-                <Text>🌐 Nginx Reverse Proxy</Text>
-                <Text>🔐 JWT Authentication</Text>
-                <Text>👤 User Entity & CRUD</Text>
-                <Text>🖥️ Login/Register UI</Text>
-                <Text>🛡️ Protected Routes</Text>
-                <Text>🏢 Company Management System</Text>
-                <Text>👥 Contact Management System</Text>
-              </Space>
-            </Card>
-
-            {/* Sprint Durumu */}
-            <Card title="🚀 Sprint Durumu" size="small">
-              <Space direction="vertical" style={{ width: '100%' }}>
-                <Text><strong>S-0:</strong> <span style={{ color: '#52c41a' }}>✅ Docker İskeleti</span></Text>
-                <Text><strong>S-1:</strong> <span style={{ color: '#52c41a' }}>✅ CI Pipeline</span></Text>
-                <Text><strong>S-2:</strong> <span style={{ color: '#52c41a' }}>✅ Auth API</span></Text>
-                <Text><strong>S-3:</strong> <span style={{ color: '#52c41a' }}>✅ Frontend Login UI</span></Text>
-                <Text><strong>S-4:</strong> <span style={{ color: '#52c41a' }}>✅ Company CRUD API</span></Text>
-                <Text><strong>S-5:</strong> <span style={{ color: '#52c41a' }}>✅ Company UI</span></Text>
-                <Text><strong>S-6:</strong> <span style={{ color: '#52c41a' }}>✅ Contact Management</span></Text>
-              </Space>
-            </Card>
-          </div>
-          </div>
+          <DashboardAnalytics />
         ) : currentView === 'companies' ? (
           <CompanyList />
         ) : currentView === 'contacts' ? (
@@ -290,6 +221,12 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
           <OrderList />
         ) : currentView === 'admin' ? (
           <AdminPanel />
+        ) : currentView === 'exchange-rates' ? (
+          <ExchangeRatesList />
+        ) : currentView === 'invoices' ? (
+          <InvoicesList onCreateNew={() => setCurrentView('invoices-new')} />
+        ) : currentView === 'invoices-new' ? (
+          <InvoiceForm onCancel={() => setCurrentView('invoices')} />
         ) : null}
       </Content>
     </Layout>
