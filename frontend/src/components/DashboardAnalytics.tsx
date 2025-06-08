@@ -1,19 +1,28 @@
 import React, { useState, useEffect } from 'react'
 import { Card, Row, Col, Statistic, Button, Typography } from 'antd'
-import { ArrowUpOutlined, ArrowDownOutlined, DownloadOutlined, FileExcelOutlined, FilePdfOutlined } from '@ant-design/icons'
+import { ArrowUpOutlined, ArrowDownOutlined, FileExcelOutlined, FilePdfOutlined } from '@ant-design/icons'
+import dayjs from 'dayjs'
 import { analyticsApi, DashboardMetrics } from '../services/analyticsApi'
 import SalesChart from './Charts/SalesChart'
 import InvoiceStatusChart from './Charts/InvoiceStatusChart'
+import ProductsChart from './Charts/ProductsChart'
+import CustomerGrowthChart from './Charts/CustomerGrowthChart'
+import ChartFilters, { FilterOptions } from './Charts/ChartFilters'
 
 const { Title } = Typography
 
 const DashboardAnalytics: React.FC = () => {
   const [dashboardMetrics, setDashboardMetrics] = useState<DashboardMetrics | null>(null)
   const [loading, setLoading] = useState(false)
+  const [filters, setFilters] = useState<FilterOptions>({
+    dateRange: [dayjs().subtract(30, 'day'), dayjs()],
+    period: 'daily',
+    category: 'all'
+  })
 
   useEffect(() => {
     loadDashboardMetrics()
-  }, [])
+  }, [filters])
 
   const loadDashboardMetrics = async () => {
     setLoading(true)
@@ -29,6 +38,16 @@ const DashboardAnalytics: React.FC = () => {
     } finally {
       setLoading(false)
     }
+  }
+
+  const handleFiltersChange = (newFilters: FilterOptions) => {
+    setFilters(newFilters)
+    // Filter değişikliklerinde chart'ları yenile
+    loadDashboardMetrics()
+  }
+
+  const handleRefresh = () => {
+    loadDashboardMetrics()
   }
 
   const handleExportPDF = () => {
@@ -74,6 +93,15 @@ const DashboardAnalytics: React.FC = () => {
           </Button>
         </div>
       </div>
+
+      {/* Interactive Filters */}
+      <ChartFilters 
+        filters={filters}
+        onFiltersChange={handleFiltersChange}
+        onRefresh={handleRefresh}
+        loading={loading}
+      />
+
       {/* Business Metrics Cards */}
       <Row gutter={[16, 16]} style={{ marginBottom: '24px' }}>
         <Col xs={24} sm={12} lg={6}>
@@ -175,13 +203,22 @@ const DashboardAnalytics: React.FC = () => {
         </Col>
       </Row>
 
-      {/* Charts Section */}
+      {/* Charts Section - Expanded */}
       <Row gutter={[16, 16]} style={{ marginBottom: '24px' }}>
         <Col xs={24} lg={12}>
           <SalesChart />
         </Col>
         <Col xs={24} lg={12}>
           <InvoiceStatusChart />
+        </Col>
+      </Row>
+
+      <Row gutter={[16, 16]} style={{ marginBottom: '24px' }}>
+        <Col xs={24} lg={12}>
+          <ProductsChart />
+        </Col>
+        <Col xs={24} lg={12}>
+          <CustomerGrowthChart />
         </Col>
       </Row>
     </div>
