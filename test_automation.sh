@@ -337,4 +337,4 @@ echo -e "   Frontend: ${GREEN}http://localhost:80${NC}"
 echo -e "   API: ${GREEN}http://localhost:3000/api/health${NC}"
 
 echo -e "\n${BLUE}Test completed at: $(date)${NC}"
-exit $EXIT_CODE 
+exit $EXIT_CODE
