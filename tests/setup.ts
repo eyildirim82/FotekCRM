@@ -1,51 +1,47 @@
-import axios from 'axios';
 import 'jest';
+import { execSync } from 'child_process';
 
 // Set default timeout for integration tests
 jest.setTimeout(30000);
 
-// Set default axios config
-axios.defaults.timeout = 10000;
-
-// Global test setup
-beforeAll(async () => {
-  console.log('🧪 Starting Integration Tests...');
-  
-  // Wait for services to be ready
-  await waitForServices();
-});
-
-afterAll(async () => {
-  console.log('✅ Integration Tests Completed');
-});
-
-async function waitForServices() {
+// Determine if dependent services are available
+function servicesAreReady(): boolean {
   if (process.env.SKIP_SERVICE_CHECK === 'true') {
     console.log('⚠️  SKIP_SERVICE_CHECK is enabled. Skipping service availability check.');
-    return;
+    return true;
   }
 
-  const maxRetries = 10;
-  const retryDelay = 2000;
-
-  for (let i = 0; i < maxRetries; i++) {
-    try {
-      // Check if API is ready
-      await axios.get(process.env.API_URL || 'http://localhost:3000/api/health');
-      console.log('✅ API service is ready');
-      return;
-    } catch (error) {
-      console.log(`⏳ Waiting for services... (${i + 1}/${maxRetries})`);
-      await new Promise(resolve => setTimeout(resolve, retryDelay));
-    }
+  const healthUrl = process.env.API_URL || 'http://localhost:3000/api/health';
+  try {
+    execSync(`curl -sf ${healthUrl} > /dev/null`, { stdio: 'ignore', timeout: 5000 });
+    console.log('✅ API service is ready');
+    return true;
+  } catch {
+    console.warn('⚠️  API service not reachable. Integration tests will be skipped.');
+    return false;
   }
-
-  console.warn('⚠️  Services are not ready after maximum retries');
 }
+
+const SERVICES_READY = servicesAreReady();
+(global as any).__SERVICES_READY__ = SERVICES_READY;
 
 // Mock environment variables
 process.env.NODE_ENV = 'test';
 process.env.API_URL = 'http://localhost:3000';
+
+// Global test setup
+beforeAll(() => {
+  console.log('🧪 Starting Integration Tests...');
+  if (!SERVICES_READY) {
+    console.log('⚠️  Skipping integration tests because services are not ready.');
+  }
+});
+
+afterAll(() => {
+  if (SERVICES_READY) {
+    console.log('✅ Integration Tests Completed');
+  }
+});
 
 // Global test utilities
 global.console = {

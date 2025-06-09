@@ -187,6 +187,8 @@ npm run test:coverage
 ```bash
 # Entegrasyon testleri
 npm run test:integration
+# Servisleri lokalinizde çalıştırmıyorsanız testleri atlamak için
+# SKIP_SERVICE_CHECK=true npm run test:integration
 ```
 
 #### E2E Tests (Playwright)
