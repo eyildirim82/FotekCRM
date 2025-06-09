@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "FotekCRM - Customer Relationship Management System",
   "scripts": {
-    "test": "jest",
+    "test": "SKIP_INTEGRATION=true SKIP_SERVICE_CHECK=true jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "test:integration": "jest --testPathPattern=tests/",
