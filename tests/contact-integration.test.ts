@@ -34,7 +34,9 @@ const testContact = {
   notes: 'Integration test contact'
 };
 
-describe('Contact Management Integration Tests', () => {
+const integrationDescribe = process.env.SKIP_INTEGRATION === 'true' ? describe.skip : describe;
+
+integrationDescribe('Contact Management Integration Tests', () => {
   let authToken: string;
   let companyId: string;
   let contactId: string;
