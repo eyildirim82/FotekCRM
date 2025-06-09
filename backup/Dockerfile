@@ -18,24 +18,6 @@ RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
 
 # Install Azure CLI
 RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
-
-# Install Azure Storage Explorer
-RUN apt-get install -y azure-storage-explorer
-
-# Install Azure Storage Emulator
-RUN apt-get install -y azure-storage-emulator
-
-# Install Azure Storage Emulator
-RUN apt-get install -y azure-storage-emulator
-
-# Install Azure Storage Emulator
-RUN apt-get install -y azure-storage-emulator
-
-# Install Azure Storage Emulator
-RUN apt-get install -y azure-storage-emulator
-
-# Install Azure Storage Emulator
-RUN apt-get install -y azure-storage-emulator
     
 # Set PATH for sqlcmd
 ENV PATH="$PATH:/opt/mssql-tools18/bin"
